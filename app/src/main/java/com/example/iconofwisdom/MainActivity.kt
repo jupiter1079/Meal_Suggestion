@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,6 @@ class MainActivity : ComponentActivity() {
             var words_of_wisdom by remember {
                 mutableStateOf("")
             }
-
            Column(
                horizontalAlignment = Alignment.CenterHorizontally,
                modifier = Modifier.fillMaxSize()
@@ -62,11 +60,20 @@ class MainActivity : ComponentActivity() {
                Row {
                    Button(onClick = {
                        words_of_wisdom = when(icon_fname){
-                           "Morning" -> "Oats served with milk and a glass of orange juice."
-                           "Mid-Morning" -> "I want God to use me to change lives."
-                           "Afternoon" -> "I want to be remembered as the best defender in South Africa."
-                           "Mid-Afternoon" -> "I want to be remembered as the best defender in South Africa."
-                           "Dinner" -> "I want to be remembered as the best defender in South Africa."
+                           "Morning" -> "Oats served with milk and a glass of orange juice." +
+                                   " Toast with bacon and avocado " +
+                                   "or Eggs with cherry tomatoes,feta and crusty bread. "
+
+                           "Mid-Morning" -> "Garden salad served with blue cheese salad dressing or" +
+                                   " smoothie with yogurt, berries, and a handful of spinach."
+
+                           "Afternoon" -> "Chicken Wrap – Whole-wheat tortilla with grilled chicken, hummus, spinach, and roasted red peppers or" +
+                                   "Rice, potato salad served with chicken curry."
+
+                           "Mid-Afternoon" -> " A small bun of cheese and chicken mayo or Greek Yogurt with Honey."
+
+                           "Dinner" -> "Pap, Steak and gravy or Mash creamy spinach and hake."
+
                            else -> "Please write correct time of the day"
                        }
                    }) {
@@ -76,7 +83,7 @@ class MainActivity : ComponentActivity() {
                        icon_fname = ""
                        words_of_wisdom = ""
                    }) {
-                       Text(text = "Clear")
+                       Text(text = "Reset")
                    }
                }
                 Text(text = "Meal Suggestion $icon_fname is:")
