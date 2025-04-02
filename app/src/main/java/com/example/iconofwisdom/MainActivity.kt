@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
             var words_of_wisdom by remember {
                 mutableStateOf("")
             }
-           Column(
+            Column(
                horizontalAlignment = Alignment.CenterHorizontally,
                modifier = Modifier.fillMaxSize()
            ) {
@@ -52,11 +52,11 @@ class MainActivity : ComponentActivity() {
                        icon_fname = text
                    },
                    placeholder = {
-                       Text(text = "Enter Time of the day.")
+                       Text(text = "Enter Time Of The Day.")
                    }
+
                )
                Spacer(modifier = Modifier.size(30.dp))
-
                Row {
                    Button(onClick = {
                        words_of_wisdom = when(icon_fname){
@@ -86,6 +86,9 @@ class MainActivity : ComponentActivity() {
                        Text(text = "Reset")
                    }
                }
+                Divider()
+
+
                 Text(text = "Meal Suggestion $icon_fname is:")
                 Text(text = words_of_wisdom)
             }
