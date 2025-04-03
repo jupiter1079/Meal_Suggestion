@@ -3,6 +3,7 @@ package com.example.iconofwisdom
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,6 +39,13 @@ class MainActivity : ComponentActivity() {
                horizontalAlignment = Alignment.CenterHorizontally,
                modifier = Modifier.fillMaxSize()
            ) {
+
+                //This enables images to be displayed on your application.
+                Image(
+                    painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "Food App Services"
+                )
+
                Text(
                    text = "Meal Suggestion",
                    fontSize = 30.sp,
@@ -59,6 +68,7 @@ class MainActivity : ComponentActivity() {
                Spacer(modifier = Modifier.size(30.dp))
                Row {
                    Button(onClick = {
+                       //selecting different meals based on the time suggestion.("When expression")
                        words_of_wisdom = when(icon_fname){
                            "Morning" -> "Oats served with milk and a glass of orange juice." +
                                    " Toast with bacon and avocado " +
@@ -74,10 +84,11 @@ class MainActivity : ComponentActivity() {
 
                            "Dinner" -> "Pap, Steak and gravy or Mash creamy spinach and hake."
 
+                            //This is for invalid inputs by the user.(error message)
                            else -> "Please write correct time of the day"
                        }
                    }) {
-                       Text(text = "Search")
+                       Text(text = " Meal Search")
                    }
                    Button(onClick = {
                        icon_fname = ""
@@ -91,6 +102,11 @@ class MainActivity : ComponentActivity() {
 
                 Text(text = "Meal Suggestion $icon_fname is:")
                 Text(text = words_of_wisdom)
+                
+                Image(
+                    painterResource(id = R.drawable.ic_launcher_background ),
+                    contentDescription = "Meal Suggestion"
+                )
             }
         }
     }

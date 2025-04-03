@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Icon of Wisdom"
+rootProject.name = "Meal_Suggestion"
 include(":app")
  
