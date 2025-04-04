@@ -49,3 +49,8 @@ Future upgrades/Improvements
 - Add favorite meals functionality with images of the meals.
 - Include dietary and vegitarian preference options.
 - Implement meal scheduling and recipes.
+
+Links
+
+https://github.com/jupiter1079/Meal_Suggestion/tree/master
+https://youtu.be/5UxzVPf91Bs
