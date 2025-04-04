@@ -1,22 +1,13 @@
 package com.example.iconofwisdom
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,88 +16,147 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
+
+    // Tag for logging
+    private val TAG = "MainActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var icon_fname by remember {
-                mutableStateOf("")
-            }
+            // States for user inputs and meal suggestion
+            var iconFname by remember { mutableStateOf("") }
+            var wordsOfWisdom by remember { mutableStateOf("") }
+            var mealImage by remember { mutableStateOf(R.drawable.ic_launcher_foreground) } // Default image
 
-            var words_of_wisdom by remember {
-                mutableStateOf("")
-            }
+            // Layout structure
             Column(
-               horizontalAlignment = Alignment.CenterHorizontally,
-               modifier = Modifier.fillMaxSize()
-           ) {
-
-                //This enables images to be displayed on your application.
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp) // Padding for better spacing
+            ) {
+                // App logo
                 Image(
-                    painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = "Food App Services"
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "App Logo",
+                    modifier = Modifier.size(120.dp) // Adjusted size for better UI
                 )
 
-               Text(
-                   text = "Meal Suggestion",
-                   fontSize = 30.sp,
-                   fontWeight = FontWeight.Black
-               )
-
-               Divider()
-               Spacer(modifier = Modifier.size(30.dp))
-
-               OutlinedTextField(
-                   value = icon_fname ,
-                   onValueChange = {text ->
-                       icon_fname = text
-                   },
-                   placeholder = {
-                       Text(text = "Enter Time Of The Day.")
-                   }
-
-               )
-               Spacer(modifier = Modifier.size(30.dp))
-               Row {
-                   Button(onClick = {
-                       //selecting different meals based on the time suggestion.("When expression")
-                       words_of_wisdom = when(icon_fname){
-                           "Morning" -> "Oats served with milk and a glass of orange juice." +
-                                   " Toast with bacon and avocado " +
-                                   "or Eggs with cherry tomatoes,feta and crusty bread. "
-
-                           "Mid-Morning" -> "Garden salad served with blue cheese salad dressing or" +
-                                   " smoothie with yogurt, berries, and a handful of spinach."
-
-                           "Afternoon" -> "Chicken Wrap – Whole-wheat tortilla with grilled chicken, hummus, spinach, and roasted red peppers or" +
-                                   "Rice, potato salad served with chicken curry."
-
-                           "Mid-Afternoon" -> " A small bun of cheese and chicken mayo or Greek Yogurt with Honey."
-
-                           "Dinner" -> "Pap, Steak and gravy or Mash creamy spinach and hake."
-
-                            //This is for invalid inputs by the user.(error message)
-                           else -> "Please write correct time of the day"
-                       }
-                   }) {
-                       Text(text = " Meal Search")
-                   }
-                   Button(onClick = {
-                       icon_fname = ""
-                       words_of_wisdom = ""
-                   }) {
-                       Text(text = "Reset")
-                   }
-               }
-                Divider()
-
-
-                Text(text = "Meal Suggestion $icon_fname is:")
-                Text(text = words_of_wisdom)
-                
-                Image(
-                    painterResource(id = R.drawable.ic_launcher_background ),
-                    contentDescription = "Meal Suggestion"
+                // Title Text
+                Text(
+                    text = "Meal Suggestion",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(vertical = 16.dp) // Added vertical padding
                 )
+
+                // Divider for visual separation
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+
+                // Input field for time of the day
+                OutlinedTextField(
+                    value = iconFname,
+                    onValueChange = { text ->
+                        iconFname = text
+                        Log.d(TAG, "User input: $text") // Logging user input for debugging
+                    },
+                    placeholder = { Text("Enter Time Of The Day (e.g., Morning, Afternoon)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = iconFname.isNotEmpty() && wordsOfWisdom.isEmpty() // Highlight error state
+                )
+
+                Spacer(modifier = Modifier.size(20.dp))
+
+                // Buttons for search and reset actions
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = {
+                            // Generate meal suggestion based on time of day and change the image
+                            val result = getMealSuggestion(iconFname)
+                            wordsOfWisdom = result.first
+                            mealImage = result.second // Set image based on the time of day
+                            Log.d(TAG, "Meal suggestion for: $iconFname") // Logging the meal suggestion
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = "Meal Search")
+                    }
+
+                    Button(
+                        onClick = {
+                            // Reset the fields
+                            iconFname = ""
+                            wordsOfWisdom = ""
+                            mealImage = R.drawable.ic_launcher_foreground // Reset to default image
+                            Log.d(TAG, "Fields reset") // Logging reset action
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = "Reset")
+                    }
+                }
+
+                // Divider for separation
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+
+                // Display the meal suggestion
+                if (wordsOfWisdom.isNotEmpty()) {
+                    Text(
+                        text = "Meal Suggestion for $iconFname:",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Text(
+                        text = wordsOfWisdom,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+
+                // Image representation of the meal suggestion
+                Image(
+                    painter = painterResource(id = mealImage),
+                    contentDescription = "Meal Suggestion",
+                    modifier = Modifier.size(200.dp) // Adjusted size for better fit
+                )
+            }
+        }
+    }
+
+    /**
+     * Function to get meal suggestion and the corresponding image based on the time of the day.
+     * @param timeOfDay The time of day entered by the user (e.g., Morning, Afternoon).
+     * @return A Pair of meal suggestion and the corresponding image resource ID.
+     */
+    private fun getMealSuggestion(timeOfDay: String): Pair<String, Int> {
+        return when (timeOfDay.lowercase()) {
+            "morning" -> {
+                // Breakfast image
+                "Toast served with egg,bacon,sausage and beans." to R.drawable.breakfast_image
+            }
+            "mid-morning" -> {
+                // Snack image
+                "Chicken Mayo bagel" to R.drawable.snack_image
+            }
+            "afternoon" -> {
+                // Lunch image
+                "Beef burger served with home made fries and green salad." to R.drawable.lunch_image
+            }
+            "mid-afternoon" -> {
+                // Snack image
+                "Blue berry smoothie,Banana smoothie or strawberry smoothie." to R.drawable.afternoon_snack_image
+            }
+            "dinner" -> {
+                // Dinner image
+                "Lemon and herb Chicken served with veggies." to R.drawable.dinner_image
+            }
+            else -> {
+                Log.e(TAG, "Invalid input: $timeOfDay") // Log error for invalid input
+                "Please enter a valid time of day (Morning, Mid-Morning, Afternoon, Mid-Afternoon, Dinner)." to R.drawable.error_image
             }
         }
     }
